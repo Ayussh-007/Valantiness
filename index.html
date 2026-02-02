@@ -1092,7 +1092,8 @@
         <p>She said YES!!! 🥰✨</p>
       
         <div id="video-wrap">
-          <video autoplay muted loop playsinline>
+          <video id="celebration-video" autoplay muted loop playsinline preload="auto" webkit-playsinline="true">
+            <source src="./assets/cute.mp4" type="video/mp4; codecs=avc1.42E01E,mp4a.40.2" />
             <source src="./assets/cute.mp4" type="video/mp4" />
           </video>
           <div id="video-fallback">
@@ -1762,6 +1763,13 @@
               duration: 0.5,
               delay: 0.48,
               ease: "back.out(1.4)",
+              onComplete: () => {
+                // Manually trigger video play for Safari
+                const video = document.getElementById('celebration-video');
+                if (video && video.paused) {
+                  video.play().catch(err => console.log('Video play failed:', err));
+                }
+              }
             }
           );
         }, 400);
@@ -1951,10 +1959,27 @@
       // SECTION 19 — VIDEO FALLBACK
       // ═══════════════════════════════════════════════════════════════════
       const vid = document.querySelector("#video-wrap video");
+      
+      // Safari-specific video handling
+      vid.addEventListener("loadedmetadata", () => {
+        // Force play on metadata load for Safari
+        if (vid.paused && yesTriggered) {
+          vid.play().catch(err => console.log('Video autoplay prevented:', err));
+        }
+      });
+      
       vid.addEventListener("error", () => {
         vid.style.display = "none";
         document.getElementById("video-fallback").style.display = "block";
       });
+      
+      // Enhanced video loading check for Safari
+      vid.addEventListener("canplay", () => {
+        if (vid.paused && yesTriggered) {
+          vid.play().catch(err => console.log('Video play attempt failed:', err));
+        }
+      });
+      
       setTimeout(() => {
         if (
           vid.networkState === vid.NETWORK_EMPTY ||
