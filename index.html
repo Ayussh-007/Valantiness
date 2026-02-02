@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💕 A Question for Priyal 💕</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Pacifico&family=Nunito:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      /* ═══════════════════════════════════════════════════════════
+   VARIABLES & RESET
+   ═══════════════════════════════════════════════════════════ */
+      :root {
+        --pink-light: #ffe0ec;
+        --pink-mid: #ffb6d9;
+        --pink-deep: #ff6fa3;
+        --rose: #e84393;
+        --yellow-soft: #fff3c4;
+        --text-dark: #5a2d4e;
+        --shadow-card: 0 24px 60px rgba(200, 100, 140, 0.25);
+        --radius-card: 32px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+        font-family: "Nunito", sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   BODY
+   ═══════════════════════════════════════════════════════════ */
+      body {
+        min-height: 100vh;
+        background: radial-gradient(
+            ellipse at 20% 50%,
+            var(--pink-light) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 80% 20%,
+            var(--yellow-soft) 0%,
+            transparent 50%
+          ),
+          radial-gradient(ellipse at 50% 80%, #ffd6e8 0%, transparent 60%),
+          linear-gradient(135deg, #ffe8f0 0%, #fff5dc 50%, #ffe0ec 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: none;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CURSOR HEART TRAIL
+   ═══════════════════════════════════════════════════════════ */
+      #cursor-main {
+        position: fixed;
+        z-index: 9998;
+        pointer-events: none;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        font-size: 16px;
+        line-height: 20px;
+        text-align: center;
+        will-change: transform;
+        transition: transform 0.06s;
+      }
+      .cursor-heart {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9997;
+        opacity: 0;
+        will-change: transform;
+        animation: cursorFade 0.65s ease-out forwards;
+      }
+      @keyframes cursorFade {
+        0% {
+          opacity: 0.8;
+          transform: scale(1) translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.25) translateY(-20px);
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   AMBIENT HEARTS
+   ═══════════════════════════════════════════════════════════ */
+      .ambient-heart {
+        position: fixed;
+        pointer-events: none;
+        opacity: 0;
+        z-index: 0;
+        animation: ambientFloat linear infinite;
+      }
+      @keyframes ambientFloat {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        8% {
+          opacity: 0.32;
+        }
+        92% {
+          opacity: 0.32;
+        }
+        100% {
+          transform: translateY(-100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   EDGE PEEK HEARTS
+   ═══════════════════════════════════════════════════════════ */
+      .peek-heart {
+        position: fixed;
+        pointer-events: none;
+        z-index: 1;
+        font-size: 1.9rem;
+        opacity: 0;
+        transition: opacity 0.4s,
+          transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .peek-heart.visible {
+        opacity: 0.55;
+      }
+      .peek-heart[data-edge="top"] {
+        top: -12px;
+        transform: translateY(-100%);
+      }
+      .peek-heart[data-edge="top"].visible {
+        transform: translateY(2px);
+      }
+      .peek-heart[data-edge="bottom"] {
+        bottom: -12px;
+        transform: translateY(100%);
+      }
+      .peek-heart[data-edge="bottom"].visible {
+        transform: translateY(-2px);
+      }
+      .peek-heart[data-edge="left"] {
+        left: -12px;
+        transform: translateX(-100%);
+      }
+      .peek-heart[data-edge="left"].visible {
+        transform: translateX(2px);
+      }
+      .peek-heart[data-edge="right"] {
+        right: -12px;
+        transform: translateX(100%);
+      }
+      .peek-heart[data-edge="right"].visible {
+        transform: translateX(-2px);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CARD
+   ═══════════════════════════════════════════════════════════ */
+      #card {
+        position: relative;
+        z-index: 10;
+        width: 90vw;
+        max-width: 500px;
+        background: linear-gradient(
+          160deg,
+          #fff8fb 0%,
+          #fff0f5 60%,
+          #fff5e6 100%
+        );
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-card);
+        padding: 36px 28px 34px;
+        text-align: center;
+        border: 2px solid rgba(255, 107, 163, 0.18);
+        opacity: 0;
+        transform: scale(0.82);
+        transition: box-shadow 0.3s, background 1s;
+      }
+      #card:hover {
+        box-shadow: 0 28px 70px rgba(200, 100, 140, 0.35);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CAT CONTAINER
+   ═══════════════════════════════════════════════════════════ */
+      #cat-container {
+        width: 170px;
+        height: 170px;
+        margin: 0 auto 2px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .cat-svg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.32s;
+      }
+      .cat-svg.visible {
+        opacity: 1;
+        animation: catIdle 2.4s ease-in-out infinite;
+      }
+      @keyframes catIdle {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+      .cat-shake {
+        animation: catShake 0.48s ease !important;
+      }
+      @keyframes catShake {
+        0%,
+        100% {
+          transform: translateX(0) translateY(0);
+        }
+        14% {
+          transform: translateX(-9px) translateY(-3px);
+        }
+        28% {
+          transform: translateX(9px) translateY(0);
+        }
+        42% {
+          transform: translateX(-6px) translateY(-2px);
+        }
+        57% {
+          transform: translateX(6px) translateY(0);
+        }
+        71% {
+          transform: translateX(-3px) translateY(-1px);
+        }
+      }
+      .cat-spin {
+        animation: catSpin 0.58s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+          forwards !important;
+      }
+      @keyframes catSpin {
+        0% {
+          transform: rotate(0deg) scale(1);
+        }
+        50% {
+          transform: rotate(180deg) scale(1.14);
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CAT SIGN
+   ═══════════════════════════════════════════════════════════ */
+      #cat-sign {
+        font-family: "Caveat", cursive;
+        font-size: clamp(0.82rem, 2.6vw, 1rem);
+        color: var(--rose);
+        text-align: center;
+        min-height: 1.3em;
+        margin-bottom: 4px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      #cat-sign.visible {
+        opacity: 1;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   QUESTION TEXT
+   ═══════════════════════════════════════════════════════════ */
+      #question-text {
+        font-family: "Pacifico", cursive;
+        font-size: clamp(1.55rem, 5.5vw, 2.1rem);
+        color: var(--text-dark);
+        line-height: 1.45;
+        margin: 6px 0 22px;
+        opacity: 0;
+      }
+      #question-text span.name {
+        color: var(--rose);
+        font-size: 1.15em;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════════ */
+      #btn-wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 18px;
+        position: relative;
+        min-height: 68px;
+        padding: 14px 0;
+      }
+      .val-btn {
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        font-size: 1.15rem;
+        border: none;
+        border-radius: 50px;
+        padding: 14px 32px;
+        cursor: pointer;
+        position: relative;
+        z-index: 5;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+        transition: filter 0.2s;
+      }
+      .val-btn:active {
+        transform: scale(0.9) !important;
+      }
+
+      /* YES */
+      #yes-btn {
+        background: linear-gradient(135deg, #ff6fa3, #e84393);
+        color: #fff;
+        box-shadow: 0 6px 22px rgba(232, 67, 147, 0.4);
+        animation: heartbeat 1.4s ease-in-out infinite;
+        transition: filter 0.2s, box-shadow 0.3s;
+      }
+      #yes-btn:hover {
+        filter: brightness(1.12);
+      }
+      @keyframes heartbeat {
+        0%,
+        100% {
+          box-shadow: 0 6px 22px rgba(232, 67, 147, 0.4);
+        }
+        14% {
+          box-shadow: 0 6px 30px rgba(232, 67, 147, 0.75);
+          transform: scale(1.05);
+        }
+        28% {
+          box-shadow: 0 6px 22px rgba(232, 67, 147, 0.4);
+          transform: scale(1);
+        }
+        42% {
+          box-shadow: 0 6px 28px rgba(232, 67, 147, 0.65);
+          transform: scale(1.03);
+        }
+        56% {
+          box-shadow: 0 6px 22px rgba(232, 67, 147, 0.4);
+          transform: scale(1);
+        }
+      }
+
+      /* NO */
+      #no-btn {
+        background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+        color: #fff;
+        box-shadow: 0 5px 18px rgba(108, 92, 231, 0.35);
+        transition: transform 0.18s, box-shadow 0.18s,
+          left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      #no-btn:hover {
+        filter: brightness(1.1);
+      }
+
+      /* Badge */
+      #no-count-badge {
+        position: absolute;
+        top: -9px;
+        right: -9px;
+        background: var(--rose);
+        color: #fff;
+        font-size: 0.64rem;
+        font-weight: 700;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 6;
+        pointer-events: none;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CELEBRATION
+   ═══════════════════════════════════════════════════════════ */
+      #celebration {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+      }
+      #celebration h2 {
+        font-family: "Pacifico", cursive;
+        font-size: clamp(2rem, 7vw, 2.8rem);
+        color: var(--rose);
+        margin-bottom: 4px;
+      }
+      #celebration p {
+        font-family: "Caveat", cursive;
+        font-size: clamp(1.2rem, 4vw, 1.6rem);
+        color: var(--text-dark);
+        margin-bottom: 16px;
+      }
+      #video-wrap {
+        width: 100%;
+        max-width: 380px;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(200, 100, 140, 0.3);
+        margin: 0 auto;
+        background: #1a0a14;
+      }
+      #video-wrap video {
+        width: 100%;
+        display: block;
+        border-radius: 18px;
+      }
+      #video-fallback {
+        display: none;
+        padding: 36px 20px;
+        text-align: center;
+        font-family: "Pacifico", cursive;
+        color: #fff;
+        font-size: 1.1rem;
+      }
+      #video-fallback span {
+        font-family: "Nunito", sans-serif;
+        font-size: 0.88rem;
+        opacity: 0.7;
+        display: block;
+        margin-top: 10px;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CONFETTI CANVAS
+   ═══════════════════════════════════════════════════════════ */
+      #confetti-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        pointer-events: none;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   FLOATING HEARTS
+   ═══════════════════════════════════════════════════════════ */
+      .float-heart {
+        position: fixed;
+        pointer-events: none;
+        z-index: 100;
+        animation: floatUp 2.4s ease-out forwards;
+      }
+      @keyframes floatUp {
+        0% {
+          transform: translateY(0) scale(1) rotate(0deg);
+          opacity: 1;
+        }
+        60% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(-380px) scale(0.18) rotate(210deg);
+          opacity: 0;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   FALLING PETALS
+   ═══════════════════════════════════════════════════════════ */
+      .petal {
+        position: fixed;
+        top: -50px;
+        pointer-events: none;
+        z-index: 98;
+        opacity: 0;
+        animation: petalFall linear forwards;
+      }
+      @keyframes petalFall {
+        0% {
+          transform: translateX(0) rotate(0deg);
+          opacity: 0;
+        }
+        4% {
+          opacity: 0.72;
+        }
+        100% {
+          transform: translateX(70px) rotate(750deg);
+          opacity: 0;
+          top: 115vh;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+      @media (max-width: 420px) {
+        #card {
+          padding: 28px 18px 26px;
+        }
+        #cat-container {
+          width: 135px;
+          height: 135px;
+        }
+        .val-btn {
+          padding: 12px 24px;
+          font-size: 1rem;
+        }
+        body {
+          cursor: auto;
+        } /* keep default cursor on very small screens */
+        #cursor-main {
+          display: none;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   SWEETALERT2 THEME
+   ═══════════════════════════════════════════════════════════ */
+      .swal2-styled.swal2-confirm {
+        background: linear-gradient(135deg, #ff6fa3, #e84393) !important;
+        border-radius: 50px !important;
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+      }
+      .swal2-popup {
+        border-radius: 24px !important;
+        font-family: "Nunito", sans-serif !important;
+        background: linear-gradient(160deg, #fff8fb, #fff0f5) !important;
+        border: 2px solid rgba(255, 107, 163, 0.2) !important;
+      }
+      .swal2-title {
+        font-family: "Pacifico", cursive !important;
+        color: var(--text-dark) !important;
+      }
+      .swal2-html-container {
+        font-family: "Caveat", cursive !important;
+        font-size: 1.3rem !important;
+        color: #6b4558 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="confetti-canvas"></canvas>
+    <div id="cursor-main">💕</div>
+
+    <!-- ═══ CARD ═══ -->
+    <div id="card">
+      <div id="cat-container">
+        <!-- CAT 0 — Happy closed-eyes -->
+        <svg class="cat-svg visible" id="cat-0" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="fur0" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f9c6d0" />
+              <stop offset="100%" stop-color="#f0a0b8" />
+            </linearGradient>
+          </defs>
+          <polygon
+            points="48,62 38,18 72,50"
+            fill="#f0a0b8"
+            stroke="#e07898"
+            stroke-width="2"
+          />
+          <polygon
+            points="152,62 162,18 128,50"
+            fill="#f0a0b8"
+            stroke="#e07898"
+            stroke-width="2"
+          />
+          <polygon points="52,58 45,30 65,50" fill="#ffb6c1" />
+          <polygon points="148,58 155,30 135,50" fill="#ffb6c1" />
+          <ellipse
+            cx="100"
+            cy="95"
+            rx="58"
+            ry="52"
+            fill="url(#fur0)"
+            stroke="#e07898"
+            stroke-width="2.5"
+          />
+          <path
+            d="M68,88 Q76,82 84,88"
+            fill="none"
+            stroke="#5a2d4e"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <path
+            d="M116,88 Q124,82 132,88"
+            fill="none"
+            stroke="#5a2d4e"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <ellipse cx="62" cy="96" rx="8" ry="4" fill="#ffb6c1" opacity="0.7" />
+          <ellipse
+            cx="138"
+            cy="96"
+            rx="8"
+            ry="4"
+            fill="#ffb6c1"
+            opacity="0.7"
+          />
+          <polygon points="100,100 96,106 104,106" fill="#e84393" />
+          <path
+            d="M96,106 Q100,112 104,106"
+            fill="none"
+            stroke="#5a2d4e"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+          <line
+            x1="30"
+            y1="100"
+            x2="62"
+            y2="103"
+            stroke="#c08090"
+            stroke-width="1.2"
+          />
+          <line
+            x1="30"
+            y1="106"
+            x2="62"
+            y2="106"
+            stroke="#c08090"
+            stroke-width="1.2"
+          />
+          <line
+            x1="138"
+            y1="103"
+            x2="170"
+            y2="100"
+            stroke="#c08090"
+            stroke-width="1.2"
+          />
+          <line
+            x1="138"
+            y1="106"
+            x2="170"
+            y2="106"
+            stroke="#c08090"
+            stroke-width="1.2"
+          />
+          <ellipse
+            cx="100"
+            cy="155"
+            rx="42"
+            ry="30"
+            fill="url(#fur0)"
+            stroke="#e07898"
+            stroke-width="2"
+          />
+          <path
+            d="M140,158 Q175,140 165,115"
+            fill="none"
+            stroke="#e07898"
+            stroke-width="6"
+            stroke-linecap="round"
+          />
+          <circle cx="165" cy="113" r="5" fill="#ffb6c1" />
+        </svg>
+
+        <!-- CAT 1 — Hopeful open eyes (trackable pupils) -->
+        <svg class="cat-svg" id="cat-1" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="fur1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fcd4e0" />
+              <stop offset="100%" stop-color="#f5aec5" />
+            </linearGradient>
+          </defs>
+          <polygon
+            points="48,62 38,18 72,50"
+            fill="#f5aec5"
+            stroke="#d88aa8"
+            stroke-width="2"
+          />
+          <polygon
+            points="152,62 162,18 128,50"
+            fill="#f5aec5"
+            stroke="#d88aa8"
+            stroke-width="2"
+          />
+          <polygon points="52,58 45,30 65,50" fill="#ffcdd5" />
+          <polygon points="148,58 155,30 135,50" fill="#ffcdd5" />
+          <ellipse
+            cx="100"
+            cy="95"
+            rx="58"
+            ry="52"
+            fill="url(#fur1)"
+            stroke="#d88aa8"
+            stroke-width="2.5"
+          />
+          <!-- Eye whites -->
+          <ellipse cx="76" cy="88" rx="11" ry="13" fill="#fff" />
+          <ellipse cx="124" cy="88" rx="11" ry="13" fill="#fff" />
+          <!-- Trackable pupils + sparkle -->
+          <circle id="pupil-L1" cx="76" cy="90" r="7" fill="#5a2d4e" />
+          <circle id="pupil-R1" cx="124" cy="90" r="7" fill="#5a2d4e" />
+          <circle id="spark-L1" cx="73" cy="86" r="3" fill="#fff" />
+          <circle id="spark-R1" cx="121" cy="86" r="3" fill="#fff" />
+          <ellipse
+            cx="60"
+            cy="100"
+            rx="10"
+            ry="5"
+            fill="#ff9ab8"
+            opacity="0.55"
+          />
+          <ellipse
+            cx="140"
+            cy="100"
+            rx="10"
+            ry="5"
+            fill="#ff9ab8"
+            opacity="0.55"
+          />
+          <polygon points="100,102 96,108 104,108" fill="#e84393" />
+          <path
+            d="M96,108 Q100,114 104,108"
+            fill="none"
+            stroke="#5a2d4e"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+          <line
+            x1="28"
+            y1="102"
+            x2="62"
+            y2="105"
+            stroke="#b07088"
+            stroke-width="1.2"
+          />
+          <line
+            x1="28"
+            y1="108"
+            x2="62"
+            y2="108"
+            stroke="#b07088"
+            stroke-width="1.2"
+          />
+          <line
+            x1="138"
+            y1="105"
+            x2="172"
+            y2="102"
+            stroke="#b07088"
+            stroke-width="1.2"
+          />
+          <line
+            x1="138"
+            y1="108"
+            x2="172"
+            y2="108"
+            stroke="#b07088"
+            stroke-width="1.2"
+          />
+          <ellipse
+            cx="100"
+            cy="155"
+            rx="42"
+            ry="30"
+            fill="url(#fur1)"
+            stroke="#d88aa8"
+            stroke-width="2"
+          />
+          <path
+            d="M140,158 Q175,140 165,115"
+            fill="none"
+            stroke="#d88aa8"
+            stroke-width="6"
+            stroke-linecap="round"
+          />
+          <circle cx="165" cy="113" r="5" fill="#ffcdd5" />
+          <text x="55" y="97" font-size="10" fill="#e84393">♥</text>
+          <text x="140" y="97" font-size="10" fill="#e84393">♥</text>
+        </svg>
+
+        <!-- CAT 2 — Sad crying (trackable pupils) -->
+        <svg class="cat-svg" id="cat-2" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="fur2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#e8c0ce" />
+              <stop offset="100%" stop-color="#d49aaf" />
+            </linearGradient>
+          </defs>
+          <polygon
+            points="48,62 38,18 72,50"
+            fill="#d49aaf"
+            stroke="#c07a95"
+            stroke-width="2"
+          />
+          <polygon
+            points="152,62 162,18 128,50"
+            fill="#d49aaf"
+            stroke="#c07a95"
+            stroke-width="2"
+          />
+          <polygon points="52,58 45,30 65,50" fill="#f0b8c8" />
+          <polygon points="148,58 155,30 135,50" fill="#f0b8c8" />
+          <ellipse
+            cx="100"
+            cy="95"
+            rx="58"
+            ry="52"
+            fill="url(#fur2)"
+            stroke="#c07a95"
+            stroke-width="2.5"
+          />
+          <ellipse cx="76" cy="86" rx="10" ry="12" fill="#fff" />
+          <ellipse cx="124" cy="86" rx="10" ry="12" fill="#fff" />
+          <circle id="pupil-L2" cx="76" cy="88" r="6" fill="#5a2d4e" />
+          <circle id="pupil-R2" cx="124" cy="88" r="6" fill="#5a2d4e" />
+          <circle id="spark-L2" cx="73" cy="85" r="2.5" fill="#fff" />
+          <circle id="spark-R2" cx="121" cy="85" r="2.5" fill="#fff" />
+          <line
+            x1="66"
+            y1="72"
+            x2="80"
+            y2="76"
+            stroke="#5a2d4e"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+          <line
+            x1="134"
+            y1="72"
+            x2="120"
+            y2="76"
+            stroke="#5a2d4e"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+          <ellipse
+            cx="70"
+            cy="100"
+            rx="3"
+            ry="5"
+            fill="#a8d8ea"
+            opacity="0.8"
+          />
+          <ellipse
+            cx="130"
+            cy="100"
+            rx="3"
+            ry="5"
+            fill="#a8d8ea"
+            opacity="0.8"
+          />
+          <path
+            d="M90,112 Q100,107 110,112"
+            fill="none"
+            stroke="#5a2d4e"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <polygon points="100,104 96,110 104,110" fill="#e84393" />
+          <line
+            x1="28"
+            y1="104"
+            x2="62"
+            y2="107"
+            stroke="#9a6878"
+            stroke-width="1.2"
+          />
+          <line
+            x1="138"
+            y1="107"
+            x2="172"
+            y2="104"
+            stroke="#9a6878"
+            stroke-width="1.2"
+          />
+          <ellipse
+            cx="100"
+            cy="155"
+            rx="42"
+            ry="30"
+            fill="url(#fur2)"
+            stroke="#c07a95"
+            stroke-width="2"
+          />
+          <path
+            d="M140,158 Q175,140 165,115"
+            fill="none"
+            stroke="#c07a95"
+            stroke-width="6"
+            stroke-linecap="round"
+          />
+          <circle cx="165" cy="113" r="5" fill="#f0b8c8" />
+        </svg>
+
+        <!-- CAT 3 — Party celebration cat -->
+        <svg class="cat-svg" id="cat-3" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="fur3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffd6e8" />
+              <stop offset="100%" stop-color="#ffaad4" />
+            </linearGradient>
+          </defs>
+          <polygon
+            points="100,8 75,55 125,55"
+            fill="#e84393"
+            stroke="#c0365f"
+            stroke-width="2"
+          />
+          <circle cx="100" cy="8" r="5" fill="#ffe066" />
+          <line
+            x1="80"
+            y1="42"
+            x2="72"
+            y2="46"
+            stroke="#ffe066"
+            stroke-width="2"
+          />
+          <line
+            x1="90"
+            y1="35"
+            x2="85"
+            y2="40"
+            stroke="#a29bfe"
+            stroke-width="2"
+          />
+          <line
+            x1="108"
+            y1="36"
+            x2="114"
+            y2="40"
+            stroke="#ffe066"
+            stroke-width="2"
+          />
+          <line
+            x1="118"
+            y1="42"
+            x2="126"
+            y2="46"
+            stroke="#a29bfe"
+            stroke-width="2"
+          />
+          <polygon
+            points="48,72 40,32 72,60"
+            fill="#ffaad4"
+            stroke="#e080a8"
+            stroke-width="2"
+          />
+          <polygon
+            points="152,72 160,32 128,60"
+            fill="#ffaad4"
+            stroke="#e080a8"
+            stroke-width="2"
+          />
+          <polygon points="52,67 46,40 65,58" fill="#ffd0e2" />
+          <polygon points="148,67 154,40 135,58" fill="#ffd0e2" />
+          <ellipse
+            cx="100"
+            cy="105"
+            rx="58"
+            ry="52"
+            fill="url(#fur3)"
+            stroke="#e080a8"
+            stroke-width="2.5"
+          />
+          <text
+            x="64"
+            y="103"
+            font-size="20"
+            text-anchor="middle"
+            fill="#e84393"
+          >
+            ★
+          </text>
+          <text
+            x="136"
+            y="103"
+            font-size="20"
+            text-anchor="middle"
+            fill="#e84393"
+          >
+            ★
+          </text>
+          <path
+            d="M78,118 Q100,132 122,118"
+            fill="#fff"
+            stroke="#5a2d4e"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+          <ellipse cx="100" cy="126" rx="7" ry="5" fill="#ff7fa3" />
+          <polygon points="100,112 96,118 104,118" fill="#e84393" />
+          <ellipse
+            cx="62"
+            cy="112"
+            rx="9"
+            ry="4.5"
+            fill="#ff9ab8"
+            opacity="0.6"
+          />
+          <ellipse
+            cx="138"
+            cy="112"
+            rx="9"
+            ry="4.5"
+            fill="#ff9ab8"
+            opacity="0.6"
+          />
+          <line
+            x1="28"
+            y1="110"
+            x2="62"
+            y2="113"
+            stroke="#c07898"
+            stroke-width="1.2"
+          />
+          <line
+            x1="138"
+            y1="113"
+            x2="172"
+            y2="110"
+            stroke="#c07898"
+            stroke-width="1.2"
+          />
+          <ellipse
+            cx="100"
+            cy="165"
+            rx="42"
+            ry="30"
+            fill="url(#fur3)"
+            stroke="#e080a8"
+            stroke-width="2"
+          />
+          <path
+            d="M140,168 Q175,150 165,125"
+            fill="none"
+            stroke="#e080a8"
+            stroke-width="6"
+            stroke-linecap="round"
+          />
+          <circle cx="165" cy="123" r="5" fill="#ffd0e2" />
+          <circle cx="85" cy="158" r="3" fill="#ffe066" />
+          <circle cx="112" cy="170" r="2.5" fill="#a29bfe" />
+          <circle cx="98" cy="175" r="2" fill="#ff6fa3" />
+        </svg>
+      </div>
+
+      <!-- Cat speech sign -->
+      <div id="cat-sign"></div>
+
+      <!-- Question -->
+      <div id="question-text">
+        <span class="name">Priyal</span>, will you be<br />my Valentine? 💕
+      </div>
+
+      <!-- Buttons -->
+      <div id="btn-wrap">
+        <button class="val-btn" id="yes-btn">Yes 💖</button>
+        <div style="position: relative; display: inline-block" id="no-btn-wrap">
+          <button class="val-btn" id="no-btn">No 🙈</button>
+          <div id="no-count-badge">0</div>
+        </div>
+      </div>
+
+      <!-- Celebration -->
+      <div id="celebration">
+        <h2>YAYYYY 💕</h2>
+        <p>She said YES!!! 🥰✨</p>
+        <div id="video-wrap">
+          <video autoplay muted loop playsinline>
+            <source src="cute.mp4" type="video/mp4" />
+          </video>
+          <div id="video-fallback">
+            💕 Place your <b>cute.mp4</b> here! 💕
+            <span
+              >Put cute.mp4 in the same folder — it plays automatically 🎬</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════════════════════════ -->
+    <script>
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 1 — WEB AUDIO SOUND ENGINE
+      // All sounds are synthesized live via Web Audio API. Zero audio files.
+      // ═══════════════════════════════════════════════════════════════════
+      let audioCtx = null;
+      function getACtx() {
+        if (!audioCtx)
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        return audioCtx;
+      }
+
+      // Generic tone helper
+      function tone(freq, dur, type, vol, delay) {
+        const ctx = getACtx(),
+          t = ctx.currentTime + (delay || 0);
+        const o = ctx.createOscillator(),
+          g = ctx.createGain();
+        o.type = type || "sine";
+        o.frequency.setValueAtTime(freq, t);
+        g.gain.setValueAtTime(vol || 0.2, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(t);
+        o.stop(t + dur + 0.04);
+      }
+
+      // Generic noise helper
+      function noise(dur, vol, hiFreq) {
+        const ctx = getACtx(),
+          t = ctx.currentTime;
+        const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+        const s = ctx.createBufferSource(),
+          g = ctx.createGain(),
+          f = ctx.createBiquadFilter();
+        s.buffer = buf;
+        f.type = "highpass";
+        f.frequency.setValueAtTime(hiFreq || 2000, t);
+        g.gain.setValueAtTime(vol || 0.12, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        s.connect(f);
+        f.connect(g);
+        g.connect(ctx.destination);
+        s.start(t);
+      }
+
+      /* ── Chime (page entrance, plays on first interaction) ── */
+      function soundChime() {
+        tone(880, 0.55, "sine", 0.17, 0);
+        tone(1100, 0.45, "sine", 0.13, 0.13);
+        tone(1320, 0.38, "sine", 0.11, 0.26);
+      }
+
+      /* ── Hover Yes: soft ascending blip ── */
+      function soundHoverYes() {
+        tone(660, 0.16, "sine", 0.14, 0);
+        tone(880, 0.13, "sine", 0.09, 0.07);
+      }
+
+      /* ── Hover No: swish (filtered noise) ── */
+      function soundHoverNo() {
+        const ctx = getACtx(),
+          t = ctx.currentTime;
+        const buf = ctx.createBuffer(1, ctx.sampleRate * 0.18, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+        const s = ctx.createBufferSource(),
+          g = ctx.createGain(),
+          f = ctx.createBiquadFilter();
+        s.buffer = buf;
+        f.type = "bandpass";
+        f.frequency.setValueAtTime(700, t);
+        f.frequency.linearRampToValueAtTime(3200, t + 0.14);
+        g.gain.setValueAtTime(0.11, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+        s.connect(f);
+        f.connect(g);
+        g.connect(ctx.destination);
+        s.start(t);
+      }
+
+      /* ── Pop: button click feedback ── */
+      function soundPop() {
+        noise(0.055, 0.17, 1400);
+        tone(380, 0.065, "sine", 0.11, 0);
+      }
+
+      /* ── Sad boop boop: auto-plays on every No ── */
+      function soundNoSad() {
+        tone(440, 0.2, "sine", 0.19, 0);
+        tone(330, 0.2, "sine", 0.19, 0.18);
+        tone(262, 0.28, "sine", 0.17, 0.36);
+      }
+
+      /* ── Rattle: quick drum-roll on cat shake ── */
+      function soundRattle() {
+        for (let i = 0; i < 5; i++) {
+          noise(0.035, 0.13, 2800 + i * 500);
+          tone(170 + i * 35, 0.04, "triangle", 0.09, i * 0.032);
+        }
+      }
+
+      /* ── Purr: double-tap cat easter egg ── */
+      function soundPurr() {
+        const ctx = getACtx(),
+          t = ctx.currentTime;
+        [75, 115].forEach((base, idx) => {
+          const o = ctx.createOscillator(),
+            lfo = ctx.createOscillator();
+          const g = ctx.createGain(),
+            dep = ctx.createGain();
+          o.type = "sawtooth";
+          o.frequency.value = base;
+          lfo.type = "sine";
+          lfo.frequency.value = 5.5;
+          dep.gain.value = 2.8;
+          const st = t + idx * 0.18;
+          g.gain.setValueAtTime(0.12, st);
+          g.gain.exponentialRampToValueAtTime(0.001, st + 1.3);
+          lfo.connect(dep);
+          dep.connect(o.frequency);
+          o.connect(g);
+          g.connect(ctx.destination);
+          o.start(st);
+          o.stop(st + 1.35);
+          lfo.start(st);
+          lfo.stop(st + 1.35);
+        });
+      }
+
+      /* ── Yes Fanfare: triumphant ascending arp ── */
+      function soundYesFanfare() {
+        [523, 659, 784, 1047].forEach((f, i) =>
+          tone(f, 0.34, "sine", 0.2, i * 0.088)
+        );
+        [1568, 2093, 2637].forEach((f, i) =>
+          tone(f, 0.22, "sine", 0.1, 0.28 + i * 0.075)
+        );
+      }
+
+      /* ── Celebration burst: fanfare + sustained pad + second burst ── */
+      function soundCelebration() {
+        soundYesFanfare();
+        setTimeout(() => {
+          [523, 659, 784].forEach((f) => tone(f, 1.9, "triangle", 0.12));
+        }, 520);
+        setTimeout(() => {
+          [784, 987, 1175].forEach((f, i) =>
+            tone(f, 0.65, "sine", 0.15, i * 0.06)
+          );
+        }, 1250);
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 2 — STATE & DATA
+      // ═══════════════════════════════════════════════════════════════════
+      let noClickCount = 0;
+      let currentCat = 0;
+      const TOTAL_CATS = 4;
+      let mouseTracking = true;
+      let yesTriggered = false;
+      let hoverYP = false; // debounce yes-hover sound
+      let hoverNP = false; // debounce no-hover sound
+
+      const catSigns = [
+        "",
+        "🐱 …please?",
+        "🐱 Don't go…",
+        "🐱 I'll be so sad 😢",
+        "🐱 PLEASE! 🙏",
+        "🐱 You're breaking my heart…",
+        "🐱 …I'll wait forever 💔",
+        "🐱 Just say yes already! 😭💕",
+      ];
+
+      const pleadMessages = [
+        {
+          title: "Aww, come on! 🥺",
+          html: "The kitty will be so sad… Are you sure? 🐱💔",
+        },
+        {
+          title: "Please… 😢",
+          html: "You make the cat cry when you say no… 😿<br/>Try again?",
+        },
+        {
+          title: "Really?! 😭",
+          html: "The cat is <i>literally</i> crying right now.<br/>You wouldn't do that… would you? 💕",
+        },
+        {
+          title: "Come on now… 🙏",
+          html: "Every 'no' breaks a tiny piece of the cat's heart.<br/>That's <b>N</b> pieces so far… 😭",
+        },
+        {
+          title: "Okay you're just being mean 😤",
+          html: "The cat put on its saddest outfit for you…<br/>Please reconsider? 🐱✨",
+        },
+        {
+          title: "The cat is writing a petition 📝",
+          html: "It has gathered <b>N</b> signatures already.<br/>All from hearts. 💕💔",
+        },
+        {
+          title: "I'm literally begging you 🙏😭",
+          html: "The cat has given you <b>N</b> chances…<br/>It still believes in you. 💕🐱",
+        },
+      ];
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 3 — CURSOR HEART TRAIL
+      // ═══════════════════════════════════════════════════════════════════
+      const cursorMain = document.getElementById("cursor-main");
+      let trailThrottle = null;
+      const trailEmoji = ["💕", "💗", "💖", "♥"];
+
+      function onMove(e) {
+        cursorMain.style.left = e.clientX + "px";
+        cursorMain.style.top = e.clientY + "px";
+        if (trailThrottle) return;
+        trailThrottle = setTimeout(() => {
+          trailThrottle = null;
+        }, 50);
+        const el = document.createElement("div");
+        el.className = "cursor-heart";
+        el.textContent =
+          trailEmoji[Math.floor(Math.random() * trailEmoji.length)];
+        el.style.left = e.clientX + "px";
+        el.style.top = e.clientY + "px";
+        el.style.fontSize = 0.5 + Math.random() * 0.4 + "rem";
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 680);
+      }
+      document.addEventListener("pointermove", onMove);
+      document.addEventListener(
+        "touchmove",
+        (e) => {
+          onMove(e.touches[0]);
+        },
+        { passive: true }
+      );
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 4 — CAT EYE TRACKING
+      // Cats 1 & 2 have open eyes; their pupils follow the mouse.
+      // ═══════════════════════════════════════════════════════════════════
+      const eyeInfo = {
+        1: { L: { cx: 76, cy: 90 }, R: { cx: 124, cy: 90 }, maxR: 3.4 },
+        2: { L: { cx: 76, cy: 88 }, R: { cx: 124, cy: 88 }, maxR: 2.8 },
+      };
+
+      function trackEyes(e) {
+        if (yesTriggered) return;
+        const info = eyeInfo[currentCat];
+        if (!info) return;
+        const svg = document.getElementById("cat-" + currentCat);
+        if (!svg) return;
+        const rect = svg.getBoundingClientRect();
+        // Map mouse to SVG 200x200 coordinate space
+        const mx = ((e.clientX - rect.left) / rect.width) * 200;
+        const my = ((e.clientY - rect.top) / rect.height) * 200;
+
+        ["L", "R"].forEach((s) => {
+          const base = info[s];
+          const pupil = document.getElementById(`pupil-${s}${currentCat}`);
+          const spark = document.getElementById(`spark-${s}${currentCat}`);
+          if (!pupil) return;
+          let dx = mx - base.cx,
+            dy = my - base.cy;
+          const dist = Math.hypot(dx, dy);
+          if (dist > info.maxR) {
+            dx = (dx / dist) * info.maxR;
+            dy = (dy / dist) * info.maxR;
+          }
+          pupil.setAttribute("cx", base.cx + dx);
+          pupil.setAttribute("cy", base.cy + dy);
+          if (spark) {
+            spark.setAttribute("cx", base.cx + dx - 2.2);
+            spark.setAttribute("cy", base.cy + dy - 2.2);
+          }
+        });
+      }
+      document.addEventListener("pointermove", trackEyes);
+      document.addEventListener(
+        "touchmove",
+        (e) => {
+          trackEyes(e.touches[0]);
+        },
+        { passive: true }
+      );
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 5 — AMBIENT + EDGE PEEK HEARTS
+      // ═══════════════════════════════════════════════════════════════════
+      (function spawnAmbient() {
+        const em = ["♥", "💕", "💗", "💖", "🌹"];
+        for (let i = 0; i < 20; i++) {
+          const el = document.createElement("div");
+          el.className = "ambient-heart";
+          el.textContent = em[Math.floor(Math.random() * em.length)];
+          el.style.left = Math.random() * 100 + "vw";
+          el.style.animationDuration = 4.5 + Math.random() * 6.5 + "s";
+          el.style.animationDelay = Math.random() * 9 + "s";
+          el.style.fontSize = 0.75 + Math.random() * 1.25 + "rem";
+          document.body.appendChild(el);
+        }
+      })();
+
+      (function peekLoop() {
+        const edges = ["top", "bottom", "left", "right"];
+        function peek() {
+          if (yesTriggered) return;
+          const edge = edges[Math.floor(Math.random() * edges.length)];
+          const el = document.createElement("div");
+          el.className = "peek-heart";
+          el.setAttribute("data-edge", edge);
+          el.textContent = ["💕", "💗", "♥", "🌸", "💖"][
+            Math.floor(Math.random() * 5)
+          ];
+          if (edge === "top" || edge === "bottom")
+            el.style.left = 4 + Math.random() * 92 + "vw";
+          else el.style.top = 8 + Math.random() * 84 + "vh";
+          document.body.appendChild(el);
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => el.classList.add("visible"))
+          );
+          setTimeout(() => {
+            el.classList.remove("visible");
+            setTimeout(() => el.remove(), 550);
+          }, 1400 + Math.random() * 1600);
+          setTimeout(peek, 2400 + Math.random() * 2800);
+        }
+        setTimeout(peek, 2000);
+      })();
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 6 — ENTRANCE ANIMATION + CHIME
+      // ═══════════════════════════════════════════════════════════════════
+      window.addEventListener("load", () => {
+        const tl = gsap.timeline();
+        tl.to(
+          "#card",
+          { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.6)" },
+          0
+        );
+        tl.to(
+          "#question-text",
+          { opacity: 1, duration: 0.55, ease: "power2.out" },
+          0.42
+        );
+        tl.fromTo(
+          "#yes-btn",
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.42, ease: "back.out(2)" },
+          0.68
+        );
+        tl.fromTo(
+          "#no-btn",
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.42, ease: "back.out(2)" },
+          0.82
+        );
+
+        // Chime fires on first user gesture (browser autoplay policy)
+        function fireChime() {
+          soundChime();
+          document.removeEventListener("pointerdown", fireChime);
+          document.removeEventListener("touchstart", fireChime);
+        }
+        document.addEventListener("pointerdown", fireChime, { once: true });
+        document.addEventListener("touchstart", fireChime, {
+          once: true,
+          passive: true,
+        });
+      });
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 7 — CAT SWITCHER
+      // ═══════════════════════════════════════════════════════════════════
+      function showCat(idx) {
+        document
+          .querySelectorAll(".cat-svg")
+          .forEach((s, i) => s.classList.toggle("visible", i === idx));
+        currentCat = idx;
+      }
+      function randomCat() {
+        let n;
+        do {
+          n = Math.floor(Math.random() * (TOTAL_CATS - 1));
+        } while (n === currentCat);
+        showCat(n);
+      }
+      function shakeCat() {
+        const c = document.getElementById("cat-" + currentCat);
+        if (!c) return;
+        c.classList.add("cat-shake");
+        setTimeout(() => c.classList.remove("cat-shake"), 500);
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 8 — DOUBLE-TAP CAT → Spin + Purr easter egg
+      // ═══════════════════════════════════════════════════════════════════
+      let lastTap = 0;
+      document
+        .getElementById("cat-container")
+        .addEventListener("pointerdown", (e) => {
+          const now = Date.now();
+          if (now - lastTap < 380) {
+            const c = document.getElementById("cat-" + currentCat);
+            if (c) {
+              c.classList.remove("cat-shake", "cat-spin");
+              void c.offsetWidth;
+              c.classList.add("cat-spin");
+              setTimeout(() => c.classList.remove("cat-spin"), 600);
+            }
+            soundPurr();
+            lastTap = 0;
+          } else {
+            lastTap = now;
+          }
+        });
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 9 — BUTTON HOVER SOUNDS
+      // ═══════════════════════════════════════════════════════════════════
+      const yesBtn = document.getElementById("yes-btn");
+      const noBtn = document.getElementById("no-btn");
+
+      yesBtn.addEventListener("pointerenter", () => {
+        if (!hoverYP) {
+          hoverYP = true;
+          soundHoverYes();
+        }
+      });
+      yesBtn.addEventListener("pointerleave", () => {
+        hoverYP = false;
+      });
+      noBtn.addEventListener("pointerenter", () => {
+        if (!hoverNP) {
+          hoverNP = true;
+          soundHoverNo();
+        }
+      });
+      noBtn.addEventListener("pointerleave", () => {
+        hoverNP = false;
+      });
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 10 — NO BUTTON ESCAPE
+      // ═══════════════════════════════════════════════════════════════════
+      const card = document.getElementById("card");
+
+      function escapeNo() {
+        const cr = card.getBoundingClientRect(),
+          br = noBtn.getBoundingClientRect();
+        const maxX = cr.width - br.width - 14,
+          maxY = cr.height - br.height - 14;
+        const rx = 14 + Math.random() * (maxX - 28),
+          ry = 14 + Math.random() * (maxY - 28);
+        if (noBtn.parentElement !== card) card.appendChild(noBtn);
+        noBtn.style.position = "absolute";
+        noBtn.style.left = rx + "px";
+        noBtn.style.top = ry + "px";
+        noBtn.style.zIndex = "15";
+        noBtn.style.margin = "0";
+      }
+
+      // Desktop proximity escape
+      document.addEventListener("pointermove", (e) => {
+        if (!mouseTracking || yesTriggered) return;
+        const r = noBtn.getBoundingClientRect();
+        if (
+          Math.hypot(
+            e.clientX - (r.left + r.width / 2),
+            e.clientY - (r.top + r.height / 2)
+          ) < 50
+        )
+          escapeNo();
+      });
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 11 — handleNo: full No interaction
+      // ═══════════════════════════════════════════════════════════════════
+      noBtn.addEventListener("pointerdown", handleNo);
+      noBtn.addEventListener("click", (e) => e.preventDefault());
+
+      function handleNo(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (yesTriggered) return;
+        noClickCount++;
+
+        // ── SOUNDS (auto-play) ──
+        soundPop();
+        soundNoSad(); // sad descending boop — plays automatically
+        soundRattle(); // rattle on shake
+
+        // ── Cat reactions ──
+        shakeCat();
+        randomCat();
+
+        // ── Cat sign update ──
+        const sign = document.getElementById("cat-sign");
+        const txt = catSigns[Math.min(noClickCount, catSigns.length - 1)];
+        sign.textContent = txt;
+        sign.classList.toggle("visible", txt.length > 0);
+
+        // ── Badge ──
+        const badge = document.getElementById("no-count-badge");
+        badge.textContent = noClickCount;
+        badge.style.display = "flex";
+        gsap.fromTo(
+          badge,
+          { scale: 0 },
+          { scale: 1, duration: 0.22, ease: "back.out(2)" }
+        );
+
+        // ── No button GROWS each click (max 1.6×) ──
+        const ns = Math.min(1 + noClickCount * 0.08, 1.6);
+        noBtn.style.transform = `scale(${ns})`;
+        noBtn.style.fontSize =
+          Math.min(1.15 + noClickCount * 0.045, 1.75) + "rem";
+
+        // ── Yes button escalates glow + size ──
+        const ys = Math.min(1 + noClickCount * 0.045, 1.4);
+        yesBtn.style.transform = `scale(${ys})`;
+        const glow = Math.min(0.4 + noClickCount * 0.09, 0.95);
+        yesBtn.style.boxShadow = `0 ${6 + noClickCount * 2}px ${
+          22 + noClickCount * 5
+        }px rgba(232,67,147,${glow})`;
+
+        // ── Card background shifts after 5 No's ──
+        if (noClickCount >= 5) {
+          const t = Math.min((noClickCount - 5) / 6, 1);
+          card.style.background = `linear-gradient(160deg, rgb(255,${
+            248 - Math.round(t * 28)
+          },${251 - Math.round(t * 38)}) 0%, #ffe0ec 60%, #ffe8d5 100%)`;
+        }
+
+        // ── Card wiggle ──
+        gsap.to("#card", {
+          rotation: -2,
+          duration: 0.07,
+          ease: "steps(1)",
+          yoyo: true,
+          repeat: 3,
+          onComplete: () => gsap.to("#card", { rotation: 0, duration: 0.07 }),
+        });
+
+        // ── Mobile: jump button ──
+        if ("ontouchstart" in window) escapeNo();
+
+        // ── Popup ──
+        let msg;
+        if (noClickCount >= 8) {
+          msg = {
+            title: "OKAY. Fine. 😤💔",
+            html: `You've rejected the cat <b>${noClickCount} times</b>.<br/><br/>
+            The cat is now sitting in a corner,<br/>eating ice cream and crying to sad songs.<br/><br/>
+            <i>…but it still loves you.</i> 🍦😭💕`,
+          };
+        } else {
+          const raw =
+            pleadMessages[Math.min(noClickCount - 1, pleadMessages.length - 1)];
+          msg = {
+            title: raw.title,
+            html: raw.html.replace(/N/g, noClickCount),
+          };
+        }
+
+        Swal.fire({
+          title: msg.title,
+          html: msg.html,
+          icon: noClickCount >= 8 ? "warning" : "info",
+          confirmButtonText: "Try again 💕",
+          showCloseButton: true,
+          timer: 6500,
+          timerProgressBar: true,
+        });
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 12 — handleYes: CELEBRATION
+      // ═══════════════════════════════════════════════════════════════════
+      yesBtn.addEventListener("pointerdown", handleYes);
+      yesBtn.addEventListener("click", (e) => e.preventDefault());
+
+      function handleYes(e) {
+        if (yesTriggered) return;
+        yesTriggered = true;
+        mouseTracking = false;
+        e.preventDefault();
+
+        soundPop();
+
+        // Hide question + buttons
+        gsap.to(["#question-text", "#btn-wrap", "#cat-sign"], {
+          opacity: 0,
+          scale: 0.85,
+          duration: 0.3,
+          ease: "power2.in",
+          onComplete: () => {
+            document.getElementById("question-text").style.display = "none";
+            document.getElementById("btn-wrap").style.display = "none";
+            document.getElementById("cat-sign").style.display = "none";
+            if (noBtn.parentElement === card) noBtn.style.display = "none";
+          },
+        });
+
+        // Party cat
+        setTimeout(() => {
+          showCat(3);
+          const pc = document.getElementById("cat-3");
+          pc.style.animation = "none";
+          gsap.to(pc, {
+            rotation: 360,
+            duration: 0.72,
+            ease: "power2.out",
+            onComplete: () => {
+              pc.style.animation = "catIdle 2.4s ease-in-out infinite";
+            },
+          });
+        }, 200);
+
+        // Celebration content
+        setTimeout(() => {
+          const cel = document.getElementById("celebration");
+          cel.style.display = "flex";
+          gsap.fromTo(
+            cel.querySelector("h2"),
+            { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2)" }
+          );
+          gsap.fromTo(
+            cel.querySelector("p"),
+            { opacity: 0, y: 14 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.38,
+              delay: 0.28,
+              ease: "power2.out",
+            }
+          );
+          gsap.fromTo(
+            "#video-wrap",
+            { scale: 0.78, opacity: 0 },
+            {
+              scale: 1,
+              opacity: 1,
+              duration: 0.5,
+              delay: 0.48,
+              ease: "back.out(1.4)",
+            }
+          );
+        }, 400);
+
+        // Effects burst
+        setTimeout(() => {
+          soundCelebration();
+          launchConfetti();
+          burstHearts();
+          fallingPetals();
+        }, 580);
+
+        // Warm up card bg
+        card.style.background =
+          "linear-gradient(160deg,#fff0f5 0%,#ffe8f0 50%,#fff5e0 100%)";
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 13 — KEYBOARD SECRET: type "yes" to trigger
+      // ═══════════════════════════════════════════════════════════════════
+      let keyBuf = "";
+      document.addEventListener("keydown", (e) => {
+        if (yesTriggered) return;
+        keyBuf += e.key.toLowerCase();
+        if (keyBuf.length > 3) keyBuf = keyBuf.slice(-3);
+        if (keyBuf === "yes") {
+          keyBuf = "";
+          yesBtn.dispatchEvent(
+            new PointerEvent("pointerdown", { bubbles: true })
+          );
+        }
+      });
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 14 — TAB TITLE FLICKER on blur
+      // ═══════════════════════════════════════════════════════════════════
+      const ORIG_TITLE = "💕 A Question for Priyal 💕";
+      const FLICKER = [
+        "🐱 Come back…",
+        "💔 Please…",
+        "😢 Miss you!",
+        "💕 Don't leave!",
+        "🥺 …Priyal?",
+      ];
+      let fIdx = 0,
+        fTimer = null;
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          fTimer = setInterval(() => {
+            document.title = FLICKER[fIdx % FLICKER.length];
+            fIdx++;
+          }, 1350);
+        } else {
+          clearInterval(fTimer);
+          fIdx = 0;
+          document.title = ORIG_TITLE;
+        }
+      });
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 15 — PAGE-LEAVE BLOCKER (beforeunload)
+      // ═══════════════════════════════════════════════════════════════════
+      window.addEventListener("beforeunload", (e) => {
+        if (yesTriggered) return;
+        e.preventDefault();
+        e.returnValue = "Are you sure? The cat will be so sad… 😭💔";
+        return e.returnValue;
+      });
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 16 — CONFETTI ENGINE (canvas)
+      // ═══════════════════════════════════════════════════════════════════
+      const cCanvas = document.getElementById("confetti-canvas");
+      const cCtx = cCanvas.getContext("2d");
+      let cPieces = [],
+        cRunning = false;
+      function resizeC() {
+        cCanvas.width = innerWidth;
+        cCanvas.height = innerHeight;
+      }
+      addEventListener("resize", resizeC);
+      resizeC();
+
+      class CP {
+        constructor() {
+          this.x = Math.random() * cCanvas.width;
+          this.y = -Math.random() * 160;
+          this.w = 5 + Math.random() * 6;
+          this.h = 8 + Math.random() * 9;
+          this.vx = (Math.random() - 0.5) * 3.6;
+          this.vy = 1.8 + Math.random() * 3.2;
+          this.rot = Math.random() * 360;
+          this.rv = (Math.random() - 0.5) * 15;
+          this.col = [
+            "#e84393",
+            "#ff6fa3",
+            "#ffe066",
+            "#a29bfe",
+            "#fd79a8",
+            "#fdcb6e",
+            "#ff7675",
+            "#6c5ce7",
+            "#fff",
+            "#ffeaa7",
+          ][Math.floor(Math.random() * 10)];
+          this.life = 1;
+          this.dec = 0.002 + Math.random() * 0.0045;
+        }
+        upd() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.rot += this.rv;
+          this.vy += 0.058;
+          this.vx *= 0.997;
+          this.life -= this.dec;
+        }
+        draw(c) {
+          c.save();
+          c.globalAlpha = Math.max(0, this.life);
+          c.fillStyle = this.col;
+          c.translate(this.x, this.y);
+          c.rotate((this.rot * Math.PI) / 180);
+          c.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+          c.restore();
+        }
+      }
+
+      function launchConfetti() {
+        cPieces = [];
+        for (let i = 0; i < 160; i++) cPieces.push(new CP());
+        if (!cRunning) {
+          cRunning = true;
+          animC();
+        }
+      }
+      function animC() {
+        cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+        cPieces.forEach((p) => {
+          p.upd();
+          p.draw(cCtx);
+        });
+        cPieces = cPieces.filter((p) => p.life > 0);
+        if (cPieces.length > 0) requestAnimationFrame(animC);
+        else cRunning = false;
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 17 — BURST FLOATING HEARTS
+      // ═══════════════════════════════════════════════════════════════════
+      function burstHearts() {
+        const em = ["💕", "💖", "💗", "💝", "🌹", "✨", "💫", "🌸"];
+        for (let i = 0; i < 38; i++) {
+          setTimeout(() => {
+            const el = document.createElement("div");
+            el.className = "float-heart";
+            el.textContent = em[Math.floor(Math.random() * em.length)];
+            el.style.left = 6 + Math.random() * 88 + "vw";
+            el.style.bottom = 4 + Math.random() * 38 + "vh";
+            el.style.fontSize = 1 + Math.random() * 1.9 + "rem";
+            el.style.animationDuration = 1.8 + Math.random() * 1.4 + "s";
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+          }, i * 68);
+        }
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 18 — FALLING PETALS
+      // ═══════════════════════════════════════════════════════════════════
+      function fallingPetals() {
+        const p = ["🌸", "🌺", "🌷", "💐", "🌹"];
+        for (let i = 0; i < 24; i++) {
+          setTimeout(() => {
+            const el = document.createElement("div");
+            el.className = "petal";
+            el.textContent = p[Math.floor(Math.random() * p.length)];
+            el.style.left = Math.random() * 100 + "vw";
+            el.style.animationDuration = 3.2 + Math.random() * 3.2 + "s";
+            el.style.fontSize = 0.9 + Math.random() * 1.3 + "rem";
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 7200);
+          }, i * 180);
+        }
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // SECTION 19 — VIDEO FALLBACK
+      // ═══════════════════════════════════════════════════════════════════
+      const vid = document.querySelector("#video-wrap video");
+      vid.addEventListener("error", () => {
+        vid.style.display = "none";
+        document.getElementById("video-fallback").style.display = "block";
+      });
+      setTimeout(() => {
+        if (
+          vid.networkState === vid.NETWORK_EMPTY ||
+          vid.networkState === vid.NETWORK_LOADING
+        ) {
+          vid.style.display = "none";
+          document.getElementById("video-fallback").style.display = "block";
+        }
+      }, 2200);
+    </script>
+  </body>
+</html>
