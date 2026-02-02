@@ -442,6 +442,10 @@
         width: 100%;
         display: block;
         border-radius: 18px;
+        background: #000;
+      }
+      #video-wrap video.video-hidden {
+        display: none;
       }
       #video-fallback {
         display: none;
@@ -450,6 +454,9 @@
         font-family: "Pacifico", cursive;
         color: #fff;
         font-size: 1.1rem;
+      }
+      #video-fallback.show {
+        display: block;
       }
       #video-fallback span {
         font-family: "Nunito", sans-serif;
@@ -1766,8 +1773,16 @@
               onComplete: () => {
                 // Manually trigger video play for Safari
                 const video = document.getElementById('celebration-video');
-                if (video && video.paused) {
-                  video.play().catch(err => console.log('Video play failed:', err));
+                if (video) {
+                  // Force load and play
+                  video.load();
+                  setTimeout(() => {
+                    video.play().catch(err => {
+                      console.log('Video play failed:', err);
+                      video.classList.add('video-hidden');
+                      document.getElementById('video-fallback').classList.add('show');
+                    });
+                  }, 100);
                 }
               }
             }
@@ -1959,36 +1974,51 @@
       // SECTION 19 — VIDEO FALLBACK
       // ═══════════════════════════════════════════════════════════════════
       const vid = document.querySelector("#video-wrap video");
+      const fallback = document.getElementById("video-fallback");
+      let videoLoaded = false;
       
       // Safari-specific video handling
-      vid.addEventListener("loadedmetadata", () => {
-        // Force play on metadata load for Safari
+      vid.addEventListener("loadeddata", () => {
+        videoLoaded = true;
+        fallback.classList.remove('show');
+        // Force play on data load for Safari
         if (vid.paused && yesTriggered) {
-          vid.play().catch(err => console.log('Video autoplay prevented:', err));
+          vid.play().catch(err => {
+            console.log('Video autoplay prevented:', err);
+            // Show fallback if autoplay fails
+            vid.classList.add('video-hidden');
+            fallback.classList.add('show');
+          });
         }
       });
       
-      vid.addEventListener("error", () => {
-        vid.style.display = "none";
-        document.getElementById("video-fallback").style.display = "block";
+      vid.addEventListener("error", (e) => {
+        console.log('Video error:', e);
+        vid.classList.add('video-hidden');
+        fallback.classList.add('show');
       });
       
       // Enhanced video loading check for Safari
-      vid.addEventListener("canplay", () => {
+      vid.addEventListener("canplaythrough", () => {
+        videoLoaded = true;
+        fallback.classList.remove('show');
         if (vid.paused && yesTriggered) {
-          vid.play().catch(err => console.log('Video play attempt failed:', err));
+          vid.play().catch(err => {
+            console.log('Video play attempt failed:', err);
+            vid.classList.add('video-hidden');
+            fallback.classList.add('show');
+          });
         }
       });
       
+      // Check if video loads within reasonable time
       setTimeout(() => {
-        if (
-          vid.networkState === vid.NETWORK_EMPTY ||
-          vid.networkState === vid.NETWORK_LOADING
-        ) {
-          vid.style.display = "none";
-          document.getElementById("video-fallback").style.display = "block";
+        if (!videoLoaded && yesTriggered) {
+          console.log('Video loading timeout');
+          vid.classList.add('video-hidden');
+          fallback.classList.add('show');
         }
-      }, 2200);
+      }, 3000);
     </script>
   </body>
 </html>
